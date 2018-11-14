@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         FloatingActionButton fb = findViewById(R.id.fab);
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     private void insertBook() {
-        SQLiteDatabase database = bookDbHelper.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
 
@@ -121,10 +121,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         contentValues.put(BookContract.BookEntry.COLUMN_PRICE, 100);
         contentValues.put(BookContract.BookEntry.COLUMN_SUPPLIER_NAME, "Balaji");
         contentValues.put(BookContract.BookEntry.COLUMN_SUPPLIER_MNO, 99999999999L);
-        database.insert(BookContract.BookEntry.TABLE_NAME, null, contentValues);
 
         Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, contentValues);
-        Log.i("URI in Main activity " , newUri.toString() );
+        Log.i("INSERTING>>>>>>>> " , newUri.toString() );
     }
 
     @Override

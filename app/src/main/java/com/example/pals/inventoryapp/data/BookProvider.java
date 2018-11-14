@@ -83,6 +83,7 @@ public class BookProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case BOOKS:
+                Log.i("INSERT>>>>>>>> " , uri.toString() );
                 return insertBook(uri, values);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
@@ -139,6 +140,6 @@ public class BookProvider extends ContentProvider {
         }
 
 
-        return database.update(BookEntry.TABLE_NAME , values , selection , selectionArgs);
+        return rowsUpdated;
     }
 }

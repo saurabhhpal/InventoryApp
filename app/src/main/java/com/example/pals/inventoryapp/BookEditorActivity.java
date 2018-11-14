@@ -23,7 +23,7 @@ import org.w3c.dom.Text;
 
 public class BookEditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    Uri currentPetUri;
+    Uri currentBookUri;
     EditText mBookName, mSupplierName, mPrice, mQuanity, mSupplierPhoneNumber;
     public static final int BOOK_LOADER = 0;
 
@@ -33,22 +33,22 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
         setContentView(R.layout.activity_book_editor);
 
         Intent intent = getIntent();
-        currentPetUri = intent.getData();
-        if (currentPetUri == null) {
+        currentBookUri = intent.getData();
+        if (currentBookUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_book));
             invalidateOptionsMenu();
         } else {
 
-            Log.i("Current Pet URI from CA", currentPetUri.toString());
-            getLoaderManager().initLoader(BOOK_LOADER, null, this);
+            Log.i("Current Pet URI from CA", currentBookUri.toString());
 
             setTitle(R.string.editor_activity_title_edit_book);
+            getLoaderManager().initLoader(BOOK_LOADER, null, this);
 
-            mBookName = findViewById(R.id.edit_book_name);
-            mSupplierName = findViewById(R.id.edit_suppliername);
-            mSupplierPhoneNumber = findViewById(R.id.edit_supplier_phone_number);
-            mPrice = findViewById(R.id.edit_price);
-            mQuanity = findViewById(R.id.edit_quantity);
+            mBookName = (EditText) findViewById(R.id.edit_book_name);
+            mSupplierName = (EditText)findViewById(R.id.edit_suppliername);
+            mSupplierPhoneNumber = (EditText)findViewById(R.id.edit_supplier_phone_number);
+            mPrice = (EditText)findViewById(R.id.edit_price);
+            mQuanity = (EditText) findViewById(R.id.edit_quantity);
 
         }
     }
@@ -56,7 +56,7 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        if (currentPetUri == null) {
+        if (currentBookUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setVisible(false);
         }
@@ -91,6 +91,7 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
 
         if (cursor.moveToFirst()) {
             String bookName = cursor.getString(cursor.getColumnIndexOrThrow(BookEntry.COLUMN_PRODUCT_NAME));
+            Log.i("book Name" , bookName);
             String supplier = cursor.getString(cursor.getColumnIndexOrThrow(BookEntry.COLUMN_SUPPLIER_NAME));
             String supplierPhone = cursor.getString(cursor.getColumnIndexOrThrow(BookEntry.COLUMN_SUPPLIER_MNO));
             int price = cursor.getInt(cursor.getColumnIndexOrThrow(BookEntry.COLUMN_PRICE));
@@ -138,7 +139,7 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
         String priceString = mPrice.getText().toString().trim();
         String quantityString = mQuanity.getText().toString().trim();
 
-        if (currentPetUri == null &&
+        if (currentBookUri == null &&
                 TextUtils.isEmpty(bookNameString) && TextUtils.isEmpty(bookSupplierNameString) && TextUtils.isEmpty(bookSupplierPhString)
                 && TextUtils.isEmpty(priceString)) {
             return;
@@ -157,24 +158,34 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
         values.put(BookEntry.COLUMN_PRICE, price);
         values.put(BookEntry.COLUMN_QUANTITY, quantity);
 
-        Uri uri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
-        if (uri == null) {
+
+        if (currentBookUri == null) {
+            Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
+
+            if (newUri == null) {
+                // If the new content URI is null, then there was an error with insertion.
+                Toast.makeText(this, "Error while saving pet", Toast.LENGTH_SHORT);
+            } else {
+                // Otherwise, the insertion was successful and we can display a toast.
+                Toast.makeText(this, "Book Saved",
+                        Toast.LENGTH_SHORT).show();
+            }
+
             // If the row ID is -1, then there was an error with insertion.
             Toast.makeText(this, getString(R.string.editor_insert_book_failed), Toast.LENGTH_SHORT).show();
         } else {
             // Otherwise, the insertion was successful and we can display a toast with the row ID.
+            int rowsAffected = getContentResolver().update(currentBookUri, values, null, null);
             Toast.makeText(this, getString(R.string.editor_insert_book_successful), Toast.LENGTH_SHORT).show();
-        }
 
-        int rowsAffected = getContentResolver().update(currentPetUri, values, null, null);
-
-        if (rowsAffected == 0) {
-            Toast.makeText(this, getString(R.string.editor_update_book_failed),
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            // Otherwise, the update was successful and we can display a toast.
-            Toast.makeText(this, getString(R.string.editor_update_book_successful),
-                    Toast.LENGTH_SHORT).show();
+            if (rowsAffected == 0) {
+                Toast.makeText(this, getString(R.string.editor_update_book_failed),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the update was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.editor_update_book_successful),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
