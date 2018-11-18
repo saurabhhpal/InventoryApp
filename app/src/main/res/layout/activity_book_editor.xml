@@ -63,6 +63,7 @@
             <EditText
                 android:id="@+id/edit_price"
                 style="@style/EditorFieldStyle"
+                android:inputType="number"
                 android:hint="@string/Price" />
         </LinearLayout>
     </LinearLayout>
@@ -80,12 +81,31 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/neg_btn"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/ic_do_not_disturb_on_black_24dp"/>
 
                 <EditText
                     android:id="@+id/edit_quantity"
-                    style="@style/EditorFieldStyle"
-                    android:hint="@string/quantity"/>
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/quantity"
+                    android:inputType="number"
+                    android:gravity="center"
+                    android:text="@string/Price"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    />
+                <Button
+                    android:id="@+id/pos_btn"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:focusable="false"
+                    android:background="@drawable/ic_add_circle_black_24dp"/>
 
             </LinearLayout>
     </LinearLayout>
