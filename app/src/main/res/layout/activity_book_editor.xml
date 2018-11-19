@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_margin"
+    android:background="@color/colorAccent"
     android:orientation="vertical"
     tools:context=".BookEditorActivity">
 
@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_margin"
         android:orientation="horizontal">
 
         <TextView
@@ -33,12 +34,21 @@
             <EditText
                 android:id="@+id/edit_suppliername"
                 style="@style/EditorFieldStyle"
+                android:layout_height="wrap_content"
                 android:hint="@string/supplier_name" />
 
             <EditText
                 android:id="@+id/edit_supplier_phone_number"
                 style="@style/EditorFieldStyle"
-                android:hint="@string/supplier_phone_number" />
+                android:hint="@string/supplier_phone_number"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/call"
+                style="@style/EditorFieldStyle"
+                android:background="@android:color/black"
+                android:text="@string/tap_to_call"
+                android:textColor="@color/colorPrimaryDark" />
 
 
         </LinearLayout>
@@ -48,11 +58,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_margin"
         android:orientation="horizontal">
 
         <TextView
             style="@style/CategoryStyle"
-            android:text="Price" />
+            android:text="@string/Label_Price" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -63,30 +74,50 @@
             <EditText
                 android:id="@+id/edit_price"
                 style="@style/EditorFieldStyle"
-                android:hint="@string/Price" />
+                android:hint="@string/Price"
+                android:inputType="number" />
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/Label_Quantity" />
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:orientation="horizontal">
 
-            <TextView
-                style="@style/CategoryStyle"
-                android:text="Quantity" />
+            <Button
+                android:id="@+id/neg_btn"
+                android:layout_width="@dimen/buttton_width"
+                android:layout_height="@dimen/buttton_height"
+                android:background="@drawable/ic_do_not_disturb_on_black_24dp" />
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <EditText
+                android:id="@+id/edit_quantity"
+                android:layout_width="@dimen/quantity_layout_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="vertical">
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginRight="@dimen/margin"
+                android:gravity="center"
+                android:hint="@string/quantity"
+                android:inputType="number" />
 
-                <EditText
-                    android:id="@+id/edit_quantity"
-                    style="@style/EditorFieldStyle"
-                    android:hint="@string/quantity"/>
+            <Button
+                android:id="@+id/pos_btn"
+                android:layout_width="@dimen/buttton_height"
+                android:layout_height="@dimen/buttton_width"
+                android:background="@drawable/ic_add_circle_black_24dp"
+                android:focusable="false" />
 
-            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

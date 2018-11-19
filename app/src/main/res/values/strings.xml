@@ -4,30 +4,72 @@
     <string name="empty_view_title_text">OOPS ! No Data Available </string>
 
     <string name="empty_view_subtitle_text">Please Try Again After Some Time</string>
-    
+
     <string name="action_insert_dummy_data">Insert Dummy Data</string>
-    
+
     <string name="action_delete_all_entries">Delete All</string>
 
     <string name="action_save">Save</string>
 
-    <string name="action_delete">Delete All</string>
+    <string name="currency">Rs. </string>
+    <string name="sale">SALE</string>
+
+    <string name="action_delete">Delete</string>
+
+    <string name="tap_to_call">Tap to Call</string>
 
     <string name="book_name"> Book Name</string>
 
-    <string name="supplier_name" > Supplier Name</string>
-    <string name="supplier_phone_number" > Supplier Phone Number </string>
-    <string name="quantity" > 0</string>
-    <string name="Price" > 0 </string>
+    <string name="supplier_name"> Supplier Name</string>
+
+    <string name="supplier_phone_number"> Supplier Phone Number </string>
+
+    <string name="quantity"> 0</string>
+
+    <string name="Price"> 0 </string>
+
+    <string name="Label_Price"> Price </string>
+
+    <string name="Label_Quantity"> Quantity </string>
+
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+
+    <!-- Dialog button text for the option to discard a user's changes [CHAR LIMIT=20] -->
+    <string name="discard">Discard</string>
+
+    <!-- Dialog button text for the option to keep editing the current pet [CHAR LIMIT=20] -->
+    <string name="keep_editing">Keep Editing</string>
+
+    <!-- Dialog message to ask the user to confirm deleting the current pet [CHAR LIMIT=NONE] -->
+    <string name="delete_dialog_msg">Delete this book?</string>
+
+    <!-- Dialog button text for the option to confirm deleting the current pet [CHAR LIMIT=20] -->
+    <string name="delete">Delete</string>
+
+    <!-- Dialog button text for the option to cancel deletion of the current pet [CHAR LIMIT=20] -->
+    <string name="cancel">Cancel</string>
+
+    <!-- Toast message in editor when current pet was successfully deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_book_successful">Pet deleted</string>
+
+    <!-- Toast message in editor when current pet has failed to be deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_book_failed">Error with deleting pet</string>
 
     <string name="editor_activity_title_new_book">Add a New Book</string>
+
+
     <string name="editor_activity_title_edit_book">Edit Book details</string>
 
     <string name="editor_insert_book_failed">Book insertion failed</string>
 
     <string name="editor_insert_book_successful">Book insertion successfull</string>
 
+    <string name="editor_error_saving_book">Error while saving book</string>
+
+    <string name="editor_save_book">Book Saved</string>
+
     <string name="editor_update_book_failed">Book Updation failed</string>
 
     <string name="editor_update_book_successful">Updation Successfull</string>
+
 </resources>

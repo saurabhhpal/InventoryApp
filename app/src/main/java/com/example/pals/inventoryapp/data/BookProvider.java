@@ -83,6 +83,7 @@ public class BookProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case BOOKS:
+                Log.i("INSERT>>>>>>>> " , uri.toString() );
                 return insertBook(uri, values);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
@@ -127,6 +128,21 @@ public class BookProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+        final int match = sUriMatcher.match(uri);
+        switch (match){
+            case BOOKS :
+                return updateBook(uri , values , selection , selectionArgs);
+
+            case BOOK_ID :
+                selection = BookEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return updateBook(uri , values , selection , selectionArgs);
+            default :
+                throw new IllegalArgumentException("Upadte is not suported" + uri);
+        }
+
+    }
+    private int updateBook(Uri uri , ContentValues values , String selection , String[] selectionArgs){
         if (values.size() == 0) {
             return 0;
         }
@@ -139,6 +155,6 @@ public class BookProvider extends ContentProvider {
         }
 
 
-        return database.update(BookEntry.TABLE_NAME , values , selection , selectionArgs);
+        return rowsUpdated;
     }
 }

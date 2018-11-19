@@ -1,4 +1,5 @@
 package com.example.pals.inventoryapp;
+
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -6,7 +7,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -17,14 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.pals.inventoryapp.data.BookContract.BookEntry;
 
 import com.example.pals.inventoryapp.data.BookContract;
 import com.example.pals.inventoryapp.data.BookDbHelper;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private BookDbHelper bookDbHelper;
     public static final int BOOK_LOADER = 0;
@@ -34,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         FloatingActionButton fb = findViewById(R.id.fab);
         fb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this , BookEditorActivity.class);
-                Uri currentBookUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI , id);
+                Intent intent = new Intent(MainActivity.this, BookEditorActivity.class);
+                Uri currentBookUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
                 intent.setData(currentBookUri);
                 startActivity(intent);
             }
@@ -63,68 +63,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         bookDbHelper = new BookDbHelper(this);
     }
 
-//    private void displayDatabaseInfo() {
-//
-//        SQLiteDatabase database = bookDbHelper.getReadableDatabase();
-//
-//        String projection[] = {
-//                BookContract.BookEntry._ID,
-//                BookContract.BookEntry.COLUMN_PRODUCT_NAME,
-//                BookContract.BookEntry.COLUMN_PRICE
-//        };
-//
-//        Cursor cursor = database.query(
-//                BookContract.BookEntry.TABLE_NAME,
-//                projection,
-//                null,
-//                null,
-//                null,
-//                null,
-//                null
-//        );
-//
-//        textView = findViewById(R.id.text_view);
-//
-//        try {
-//
-//            textView.setText("Books table contains " + cursor.getCount() + "rows \n");
-//            textView.append(BookContract.BookEntry._ID + " - " +
-//                    BookContract.BookEntry.COLUMN_PRODUCT_NAME + " - " +
-//                    BookContract.BookEntry.COLUMN_PRICE
-//            );
-//
-//            int idColumnIndex = cursor.getColumnIndex(BookContract.BookEntry._ID);
-//            int productColumnIndex = cursor.getColumnIndex(BookContract.BookEntry.COLUMN_PRODUCT_NAME);
-//            int productPriceCOlumnIndex = cursor.getColumnIndex(BookContract.BookEntry.COLUMN_PRICE);
-//
-//            while (cursor.moveToNext()) {
-//                int current_Id = cursor.getInt(idColumnIndex);
-//                String productName = cursor.getString(productColumnIndex);
-//                String productPrice = cursor.getString(productPriceCOlumnIndex);
-//
-//                textView.append(("\n " + current_Id + " - " +
-//                        productName + " - " +
-//                        productPrice));
-//            }
-//        } finally {
-//            cursor.close();
-//        }
-//    }
-
-
     private void insertBook() {
-        SQLiteDatabase database = bookDbHelper.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(BookContract.BookEntry.COLUMN_PRODUCT_NAME, "DS000");
+        contentValues.put(BookContract.BookEntry.COLUMN_PRODUCT_NAME, "Coreman");
         contentValues.put(BookContract.BookEntry.COLUMN_PRICE, 100);
-        contentValues.put(BookContract.BookEntry.COLUMN_SUPPLIER_NAME, "Balaji");
-        contentValues.put(BookContract.BookEntry.COLUMN_SUPPLIER_MNO, 99999999999L);
-        database.insert(BookContract.BookEntry.TABLE_NAME, null, contentValues);
+        contentValues.put(BookContract.BookEntry.COLUMN_SUPPLIER_NAME, "T&T");
+        contentValues.put(BookContract.BookEntry.COLUMN_SUPPLIER_MNO, 1234567890L);
 
         Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, contentValues);
-        Log.i("URI in Main activity " , newUri.toString() );
+        Log.i("INSERTING>>>>>>>> ", newUri.toString());
     }
 
     @Override
@@ -173,6 +122,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void deleteAllBooks() {
         Log.e("URI", BookContract.BookEntry.CONTENT_URI.toString());
         int rowsDeleted = getContentResolver().delete(BookContract.BookEntry.CONTENT_URI, null, null);
-        Log.v("CatalogActivity", rowsDeleted + " rows deleted from pet database");
+        Log.v("CatalogActivity", rowsDeleted + " rows deleted from books database");
     }
 }
