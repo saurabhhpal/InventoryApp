@@ -46,7 +46,6 @@ public class InventoryCursorAdapter extends CursorAdapter {
         quantity_tv.setText(quantity);
 
 
-
         sale_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +53,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
                 Uri uri = ContentUris.withAppendedId(BookContract.BookEntry.CONTENT_URI, currentid);
                 if (qty > 0) {
                     ContentValues contentValues = new ContentValues();
-                    contentValues.put(BookContract.BookEntry.COLUMN_QUANTITY , --qty);
+                    contentValues.put(BookContract.BookEntry.COLUMN_QUANTITY, --qty);
                     int rowsAffected = context.getContentResolver().update(uri, contentValues, null, null);
 
                     if (rowsAffected == 0) {
@@ -64,14 +63,13 @@ public class InventoryCursorAdapter extends CursorAdapter {
                         //updated successful
                         Toast.makeText(context, "UPDATION SUCCESSFUL", Toast.LENGTH_SHORT).show();
 
-                }
-                else {
+                } else {
                     Toast.makeText(context, "not greater that 0", Toast.LENGTH_SHORT).show();
                 }
             }
 
-    });
+        });
 
 
-}
+    }
 }

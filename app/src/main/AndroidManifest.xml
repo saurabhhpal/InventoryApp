@@ -17,10 +17,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".BookEditorActivity"></activity>
+
+
         <provider
             android:name=".data.BookProvider"
             android:authorities="com.example.pals.inventoryapp"
             android:exported="false" />
     </application>
+
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
 </manifest>

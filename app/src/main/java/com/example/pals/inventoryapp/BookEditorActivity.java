@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +30,7 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
 
     Uri currentBookUri;
     EditText mBookName, mSupplierName, mPrice, mQuanity, mSupplierPhoneNumber;
-    TextView neg_btn, pos_btn;
+    Button neg_btn, pos_btn, call_btn;
     public static final int BOOK_LOADER = 0;
     int quantity = 0;
     boolean mBookhasChanged;
@@ -42,18 +43,36 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
 
         Intent intent = getIntent();
         currentBookUri = intent.getData();
-        quantity = Integer.valueOf(mQuanity.getText().toString().trim());
+        try {
+            quantity = Integer.valueOf(mQuanity.getText().toString().trim());
+
+        } catch (Exception e) {
+            quantity = 0;
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (currentBookUri == null) {
             setTitle(getString(R.string.editor_activity_title_new_book));
             invalidateOptionsMenu();
         } else {
 
-            Log.i("Current Pet URI from CA", currentBookUri.toString());
+            Log.i("Current BOOK URI ", currentBookUri.toString());
             setTitle(R.string.editor_activity_title_edit_book);
             getLoaderManager().initLoader(BOOK_LOADER, null, this);
 
         }
+
+        call_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(mSupplierPhoneNumber.getText().toString())) {
+                    Toast.makeText(BookEditorActivity.this, "Please Add phone number to call", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + mSupplierPhoneNumber.getText().toString()));
+                    startActivity(intent);
+                }
+            }
+        });
 
         neg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +106,14 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
         mQuanity = findViewById(R.id.edit_quantity);
         pos_btn = findViewById(R.id.pos_btn);
         neg_btn = findViewById(R.id.neg_btn);
+        call_btn = findViewById(R.id.call);
+
+        mBookName.setOnTouchListener(mTouchListener);
+        mSupplierName.setOnTouchListener(mTouchListener);
+        mSupplierPhoneNumber.setOnTouchListener(mTouchListener);
+        mPrice.setOnTouchListener(mTouchListener);
+        mQuanity.setOnTouchListener(mTouchListener);
+
     }
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
@@ -131,7 +158,7 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Keep editing" button, so dismiss the dialog
-                // and continue editing the pet.
+                // and continue editing the book.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -154,14 +181,14 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Delete" button, so delete the pet.
+                // User clicked the "Delete" button, so delete the book.
                 deleteBook();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Cancel" button, so dismiss the dialog
-                // and continue editing the pet.
+                // and continue editing the book.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -242,7 +269,7 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
         switch (item.getItemId()) {
             case R.id.action_save:
                 saveBook();
-                finish();
+
                 return true;
 
             case R.id.action_delete:
@@ -288,62 +315,77 @@ public class BookEditorActivity extends AppCompatActivity implements LoaderManag
         if (currentBookUri == null &&
                 TextUtils.isEmpty(bookNameString) && TextUtils.isEmpty(bookSupplierNameString) && TextUtils.isEmpty(bookSupplierPhString)
                 && TextUtils.isEmpty(priceString)) {
+            finish();
             return;
         }
         //checking price value should be greater that 0
-        if (Integer.valueOf(priceString) < 0) {
+        if (priceString.equals("") || Integer.valueOf(priceString) < 0) {
 
-            Toast.makeText(this, "Price should be greater than 0 ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Price should be greater than 0 or equal  ", Toast.LENGTH_SHORT).show();
             return;
-        } else if (Integer.valueOf(quantityString) < 0) {
-
-            Toast.makeText(this, "Price should be greater than 0 ", Toast.LENGTH_SHORT).show();
+        } else if (quantityString.equals("") || Integer.valueOf(quantityString) < 0) {
+            // checking quantity
+            Toast.makeText(this, "Price should be greater than 0 or equal ", Toast.LENGTH_SHORT).show();
             return;
-        }
-
-
-        int quantity = 0, price = 0;
-
-        ContentValues values = new ContentValues();
-        values.put(BookEntry.COLUMN_PRODUCT_NAME, bookNameString);
-        values.put(BookEntry.COLUMN_SUPPLIER_NAME, bookSupplierNameString);
-        values.put(BookEntry.COLUMN_SUPPLIER_MNO, bookSupplierPhString);
-        if (!TextUtils.isEmpty(priceString) || !TextUtils.isEmpty(quantityString)) {
-            quantity = Integer.parseInt(quantityString);
-            price = Integer.parseInt(priceString);
-        }
-        values.put(BookEntry.COLUMN_PRICE, price);
-        values.put(BookEntry.COLUMN_QUANTITY, quantity);
-
-
-        if (currentBookUri == null) {
-            Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
-
-            if (newUri == null) {
-                // If the new content URI is null, then there was an error with insertion.
-                Toast.makeText(this, "Error while saving pet", Toast.LENGTH_SHORT);
-            } else {
-                // Otherwise, the insertion was successful and we can display a toast.
-                Toast.makeText(this, "Book Saved",
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            // If the row ID is -1, then there was an error with insertion.
-            Toast.makeText(this, getString(R.string.editor_insert_book_failed), Toast.LENGTH_SHORT).show();
+        } else if (bookNameString.equals("")) {
+            Toast.makeText(this, "Book Name should not be empty", Toast.LENGTH_SHORT).show();
+            return;
+            //checking null values for  book/product name
+        } else if (bookSupplierNameString.equals("")) {
+            Toast.makeText(this, "Book Supplier should not be empty", Toast.LENGTH_SHORT).show();
+            return;
+            //checking null values for  book/product name
+        } else if (bookSupplierPhString.equals("")) {
+            //checking null values for  book/product name
+            Toast.makeText(this, "Phone number should not be empty", Toast.LENGTH_SHORT).show();
+            return;
         } else {
-            // Otherwise, the insertion was successful and we can display a toast with the row ID.
-            int rowsAffected = getContentResolver().update(currentBookUri, values, null, null);
-            Toast.makeText(this, getString(R.string.editor_insert_book_successful), Toast.LENGTH_SHORT).show();
 
-            if (rowsAffected == 0) {
-                Toast.makeText(this, getString(R.string.editor_update_book_failed),
-                        Toast.LENGTH_SHORT).show();
+
+            int quantity = 0, price = 0;
+
+            ContentValues values = new ContentValues();
+            values.put(BookEntry.COLUMN_PRODUCT_NAME, bookNameString);
+            values.put(BookEntry.COLUMN_SUPPLIER_NAME, bookSupplierNameString);
+            values.put(BookEntry.COLUMN_SUPPLIER_MNO, bookSupplierPhString);
+            if (!TextUtils.isEmpty(priceString) || !TextUtils.isEmpty(quantityString)) {
+                quantity = Integer.parseInt(quantityString);
+                price = Integer.parseInt(priceString);
+            }
+            values.put(BookEntry.COLUMN_PRICE, price);
+            values.put(BookEntry.COLUMN_QUANTITY, quantity);
+
+
+            if (currentBookUri == null) {
+                Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
+
+                if (newUri == null) {
+                    // If the new content URI is null, then there was an error with insertion.
+                    Toast.makeText(this, getResources().getString(R.string.editor_error_saving_book), Toast.LENGTH_SHORT);
+                } else {
+                    // Otherwise, the insertion was successful and we can display a toast.
+                    Toast.makeText(this, getResources().getString(R.string.editor_save_book),
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                // If the row ID is -1, then there was an error with insertion.
+                Toast.makeText(this, getString(R.string.editor_insert_book_failed), Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the update was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_update_book_successful),
-                        Toast.LENGTH_SHORT).show();
+                // Otherwise, the insertion was successful and we can display a toast with the row ID.
+                int rowsAffected = getContentResolver().update(currentBookUri, values, null, null);
+                Toast.makeText(this, getString(R.string.editor_insert_book_successful), Toast.LENGTH_SHORT).show();
+
+                if (rowsAffected == 0) {
+                    Toast.makeText(this, getString(R.string.editor_update_book_failed),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    // Otherwise, the update was successful and we can display a toast.
+                    Toast.makeText(this, getString(R.string.editor_update_book_successful),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         }
+        finish();
     }
 
     private void deleteBook() {
